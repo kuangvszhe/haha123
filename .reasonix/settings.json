@@ -1,10 +1,29 @@
 {
   "hooks": {
     "PreToolUse": [
-      { "match": "bash.*rm -rf /$", "command": "echo 'BLOCKED: dangerous command' && exit 2" }
+      {
+        "match": "^rm -rf /$|^rm -rf --no-preserve-root",
+        "command": "echo '⛔ 危险操作已阻止' && exit 2"
+      },
+      {
+        "match": "^git push --force",
+        "command": "echo '⚠️ force push 需确认' && exit 2"
+      },
+      {
+        "match": "^curl .*\\| bash$",
+        "command": "echo '⛔ 阻止 pipe到bash' && exit 2"
+      }
+    ],
+    "PostToolUse": [
+      {
+        "match": "\\.(ts|js|tsx|jsx|css|json)$",
+        "command": "npx prettier --write --ignore-unknown \"$REASONIX_TOOL_RESULT\" 2>/dev/null || true"
+      }
     ],
     "Stop": [
-      { "command": "echo '--- session end ---'" }
+      {
+        "command": "echo \"会话结束: $(date)\""
+      }
     ]
   }
 }
