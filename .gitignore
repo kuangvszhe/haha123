@@ -1,0 +1,14 @@
+# Reasonix 本地会话数据 — 不应提交
+.reasonix/desktop-topic-created-at.json
+.reasonix/desktop-topic-title-sources.json
+.reasonix/desktop-topic-titles.json
+
+# 操作系统
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
