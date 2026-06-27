@@ -1,0 +1,10 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      { "match": "bash.*rm -rf /$", "command": "echo 'BLOCKED: dangerous command' && exit 2" }
+    ],
+    "Stop": [
+      { "command": "echo '--- session end ---'" }
+    ]
+  }
+}
