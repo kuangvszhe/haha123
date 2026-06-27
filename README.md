@@ -8,7 +8,7 @@
 |---|---|---|
 | 📜 宪法 | 1 | `AGENTS.md` — 行为准则、工作流、约定 |
 | 🧩 Skills | 10 | 从 Git 到安全审计的完整工作流 |
-| 🔧 MCP | 1 | GitHub (26 工具) |
+| 🔧 MCP | 2 | GitHub (26 工具) + Playwright (23 工具) |
 | 🧠 记忆 | 4 | 跨会话持久化 |
 
 ## 🚀 快速开始
@@ -44,6 +44,7 @@ ls .reasonix/skills/
 | `investigate` | gstack + omp | 根因调查 |
 | `security-audit` | gstack + OpenClaw | 安全审计 |
 | `design-constraint` | Google Design.md | 设计规范约束 |
+| `browser-automation` | Ava + Playwright MCP | 浏览器控制(23工具) |
 
 ---
 

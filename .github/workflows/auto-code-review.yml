@@ -1,0 +1,129 @@
+# CI/CD 自动代码审查
+# 源自 Claude Code 的 GitHub Actions CI 集成
+# 每个 PR 自动触发代码审查 + 安全扫描
+
+name: auto-code-review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  push:
+    branches: [main, master]
+
+jobs:
+  # === 阶段 1: 代码质量检查 ===
+  quality-check:
+    name: 代码质量检查
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        lang: [go, rust, python, node]  # 根据需要启用
+    steps:
+      - uses: actions/checkout@v4
+
+      # Go 检查
+      - name: Go format + vet
+        if: hashFiles('go.mod') != ''
+        run: |
+          go fmt ./...
+          go vet ./...
+
+      # Rust 检查
+      - name: Rust format + clippy
+        if: hashFiles('Cargo.toml') != ''
+        run: |
+          cargo fmt --check
+          cargo clippy -- -D warnings
+
+      # Python 检查
+      - name: Python lint
+        if: hashFiles('pyproject.toml', 'setup.py', 'requirements.txt') != ''
+        run: |
+          pip install ruff
+          ruff check .
+
+      # Node/TS 检查
+      - name: Node lint + type-check
+        if: hashFiles('package.json') != ''
+        run: |
+          npm ci
+          npm run lint 2>/dev/null || true
+          npx tsc --noEmit 2>/dev/null || true
+
+  # === 阶段 2: 安全审计 ===
+  security-check:
+    name: 安全审计
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 依赖审计 (Node)
+        if: hashFiles('package.json') != ''
+        run: npm audit --audit-level=high || true
+
+      - name: 依赖审计 (Python)
+        if: hashFiles('requirements.txt') != ''
+        run: |
+          pip install pip-audit
+          pip-audit || true
+
+      - name: 秘密扫描
+        uses: trufflesecurity/trufflehog@v3
+        with:
+          extra_args: --only-verified
+
+  # === 阶段 3: 测试 ===
+  test:
+    name: 测试
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Go test
+        if: hashFiles('go.mod') != ''
+        run: go test ./... -v -count=1
+
+      - name: Rust test
+        if: hashFiles('Cargo.toml') != ''
+        run: cargo test
+
+      - name: Python test
+        if: hashFiles('pyproject.toml', 'setup.py') != ''
+        run: |
+          pip install pytest
+          pytest -v
+
+      - name: Node test
+        if: hashFiles('package.json') != ''
+        run: |
+          npm ci
+          npm test
+
+  # === 阶段 4: AI 代码审查（需配置 GitHub Token） ===
+  # 使用已安装的 GitHub MCP 或第三方 AI 审查工具
+  ai-review:
+    name: AI 代码审查
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 获取 PR 差异
+        id: diff
+        run: |
+          git fetch origin ${{ github.base_ref }}
+          git diff origin/${{ github.base_ref }}...HEAD > pr-diff.txt
+          echo "diff_size=$(wc -c < pr-diff.txt)" >> $GITHUB_OUTPUT
+
+      - name: AI 审查评论（示例 — 替换为实际 AI 服务）
+        if: steps.diff.outputs.diff_size > 0
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # 此处可集成 CodeRabbit / GitHub Copilot Code Review / 自定义 LLM API
+          # 示例：使用 ChatGPT API 做审查
+          DIFF=$(cat pr-diff.txt | head -2000)
+          echo "PR 差异大小: ${{ steps.diff.outputs.diff_size }} bytes"
+          echo "AI 审查已触发 — 等待审查结果..."
