@@ -215,7 +215,7 @@
 ---
 
 *最后更新：2026-06-27*
-*融合自：Claude Code, OpenCode, CodeX, OpenClaw, Oh My Pi (omp), Google Design.md, gstack, Trae CN, Reasonix*
+*融合自：Claude Code, OpenCode, CodeX, OpenClaw, Oh My Pi (omp), Google Design.md, gstack, Ava, Hermes Agent, Trae CN, Reasonix*
 *已集成 21 个 Skills + 3 MCP (GitHub/Playwright/知识图谱) + AGENTS.md 宪法 — 全面超越单一工具*
 *项目总览见 [README.md](./README.md)*
 *浏览器控制已对齐 Ava，知识图谱记忆已对齐 claude-mem，自动记忆已对齐 Hermes*

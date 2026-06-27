@@ -17,12 +17,13 @@
 | 来源 | 贡献的技能 |
 |---|---|
 | **Claude Code** | git-workflow, hooks-auto-check, ci-cd-review, cross-file-analysis, semantic-memory, auto-compact |
-| **Oh My Pi (omp)** | debug-helper, dap-debugger, code-review |
-| **CodeX** | multi-agent-orchestra |
-| **gstack** | office-hours, arch-review, investigate, security-audit |
+| **Oh My Pi (omp)** | debug-helper, dap-debugger, code-review (与 CodeX 联合) |
+| **CodeX** | multi-agent-orchestra, code-review (与 Oh My Pi 联合) |
+| **gstack** | office-hours, arch-review (与 omp 联合), investigate (与 omp 联合) |
 | **Google Design.md** | design-constraint |
 | **Ava** | browser-automation (Playwright MCP) |
 | **Hermes Agent** | loop-guard, checkpoint, sandbox-exec, curator-memory, self-evolve |
+| **OpenClaw** | security-audit (与 gstack 联合) |
 | **Trae CN** | 中文母语支持 |
 
 ## 🚀 快速开始
@@ -110,14 +111,23 @@ ls .reasonix/skills/
 | 场景 | 触发 |
 |---|---|
 | 新功能需求 | office-hours + arch-review |
-| 编辑文件后 | hooks-auto-check (format→lint→type→test) |
+| 编辑文件后 | hooks-auto-check (format→lint→type→test) + code-review |
+| CI/CD 触发 | ci-cd-review (4阶段流水线) |
 | 提交/PR | git-workflow |
 | 涉及安全 | code-review 安全清单 → security-audit |
-| 前端问题 | browser-automation (打开浏览器查看) |
-| 上下文快满 | auto-compact (自动压缩) |
-| 死循环 | loop-guard (检测+停止) |
-| 大变更前 | checkpoint (快照) |
-| 任务完成 | self-evolve (优化) |
+| 涉及调试 | debug-helper(普通bug) / dap-debugger(段错误) / investigate(生产故障) |
+| Web 调试 | browser-automation (打开浏览器查看) |
+| 涉及设计 | design-constraint |
+| 上下文快满 | auto-compact (按4级阈值自动压缩) |
+| 跨文件追踪 | cross-file-analysis (grep→LSP→explore逐层深入) |
+| 生产故障 | investigate (时间线重建+事后分析) |
+| 死循环检测 | loop-guard (重复失败/无进展自动停止) |
+| 大变前快照 | checkpoint (批量修改>3文件自动创建) |
+| 高危操作 | sandbox-exec (rm/批量替换/数据库修改隔离) |
+| 记忆过载 | curator-memory (>50条/任务完成自动整理) |
+| 需要旧信息 | semantic-memory (AI语义搜索) |
+| 多任务并行 | multi-agent-orchestra |
+| 任务完成 | self-evolve (自动优化) |
 
 ---
 
